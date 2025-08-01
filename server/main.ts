@@ -8,6 +8,7 @@ import lookupInsight from "./operations/lookup-insight.ts";
 
 console.log("Loading configuration");
 
+// application port
 const env = {
   port: Port.parse(Deno.env.get("SERVER_PORT")),
 };
@@ -21,13 +22,17 @@ const db = new Database(dbFilePath);
 
 console.log("Initialising server");
 
-const router = new oak.Router();
+const router = new oak.Router({
+  prefix: "/api",
+});
 
 router.get("/_health", (ctx) => {
   ctx.response.body = "OK";
   ctx.response.status = 200;
 });
 
+
+// backend receiving requests from FE
 router.get("/insights", (ctx) => {
   const result = listInsights({ db });
   ctx.response.body = result;

@@ -7,6 +7,7 @@ import type { Insight } from "../schemas/insight.ts";
 export const App = () => {
   const [insights, setInsights] = useState<Insight>([]);
 
+  // routing to backend with 'api' prefix
   useEffect(() => {
     fetch(`/api/insights`).then((res) => setInsights(res.json()));
   }, []);
