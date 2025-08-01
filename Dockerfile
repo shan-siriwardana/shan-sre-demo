@@ -1,15 +1,16 @@
-# ─── Stage 1: Build ───────────────────────
-FROM denoland/deno:1.44.4 AS builder
+# Stage 1: Build the server 
+FROM denoland/deno:2.4.2 AS builder
 WORKDIR /app
 
-# Copy everything you need
-COPY deno.json deno.lock server/ lib/ . 
+# Copy the backend code & its Deno config
+COPY server/ ./server
+COPY lib/    ./lib
 
-# Build in server/
 WORKDIR /app/server
+
 RUN deno task build
 
-# ─── Stage 2: Runtime ─────────────────────
+# Stage 2: Runtime image
 FROM debian:12-slim
 RUN useradd -ms /bin/bash deno
 USER deno
