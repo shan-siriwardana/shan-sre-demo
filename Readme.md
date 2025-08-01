@@ -72,4 +72,10 @@ deno task build
 deno check .
 ```
 
-added by shan
+#### added by shan
+
+
+Add data:
+sqlite3 /home/deno/tmp/db.sqlite3 "INSERT INTO insights (brand, createdAt, text) VALUES (1, '2025-08-01T13:00:00Z', 'ECS Insight A');"
+sqlite3 /home/deno/tmp/db.sqlite3 "INSERT INTO insights (brand, createdAt, text) VALUES (2, '2025-08-01T14:00:00Z', 'ECS Insight B');"
+sqlite3 /home/deno/tmp/db.sqlite3 "INSERT INTO insights (brand, createdAt, text) VALUES (3, '2025-08-01T15:00:00Z', 'ECS Insight C');"

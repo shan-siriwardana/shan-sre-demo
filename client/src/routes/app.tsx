@@ -5,11 +5,20 @@ import styles from "./app.module.css";
 import type { Insight } from "../schemas/insight.ts";
 
 export const App = () => {
-  const [insights, setInsights] = useState<Insight>([]);
+  const [insights, setInsights] = useState<Insight[]>([]);
 
-  // routing to backend with 'api' prefix
   useEffect(() => {
-    fetch(`/api/insights`).then((res) => setInsights(res.json()));
+    fetch(`/api/insights`)
+      .then((res) => res.json())
+      .then((data) => {
+        const mapped = data.map((item: any) => ({
+          id: item.id,
+          brandId: item.brand,        // map brand -> brandId
+          date: item.createdAt,       // map createdAt -> date
+          text: item.text,
+        }));
+        setInsights(mapped);
+      });
   }, []);
 
   return (
