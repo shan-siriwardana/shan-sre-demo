@@ -65,15 +65,14 @@ jobs:
         run: |
           docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
 
-      - name: Update ECS task definition
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEF }} > task-def.json
+      -  name: Update ECS task definition
+         run: |
+            aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEF }} > task-def.json
 
-          jq --arg img "${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}" \
-            '.taskDefinition.containerDefinitions[0].image=$img |
-             del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' task-def.json > new-task-def.json
+            jq --arg img "${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}" \
+            .taskDefinition | .containerDefinitions[0].image = $img | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)' task-def.json > new-task-def.json
 
-          aws ecs register-task-definition --cli-input-json file://new-task-def.json
+            aws ecs register-task-definition --cli-input-json file://new-task-def.json
 
       - name: Update ECS service to use new task definition
         run: |
