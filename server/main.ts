@@ -48,6 +48,7 @@ router.get("/insights", (ctx) => {
   ctx.response.status = 200;
 });
 
+// not used by FE
 router.get("/insights/:id", (ctx) => {
   const params = ctx.params as Record<string, any>;
   const result = lookupInsight({ db, id: params.id });
