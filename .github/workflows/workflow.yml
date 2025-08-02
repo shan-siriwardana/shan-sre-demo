@@ -57,7 +57,7 @@ jobs:
         uses: denoland/setup-deno@v1
         with:
           deno-version: 2.4.2
-          
+
       - name: Build Frontend (client)
         run: |
           cd client
@@ -65,7 +65,7 @@ jobs:
 
       - name: Sync Frontend end artifacts to S3
         run: |
-          aws s3 sync client/build s3://${{ vars.S3_BUCKET_NAME }}/ --delete
+          aws s3 sync client/build s3://${{ vars.FE_S3_BUCKET_NAME }}/ --delete
 
       - name: Login to Amazon ECR
         id: login-ecr
