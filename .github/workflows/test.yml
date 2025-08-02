@@ -25,14 +25,9 @@ jobs:
 
     - name: Run server tests
       run: deno test --allow-all server/
-      
-    # - name: Run client tests
-    #   run: deno task --cwd client test
 
     - name: Install client dependencies
-      working-directory: ./client
-      run: npm install
+      run: npm install --prefix client
       
     - name: Run client tests
-      working-directory: ./client
-      run: npm run test
+      run: deno task --cwd client test
