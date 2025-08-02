@@ -1,4 +1,4 @@
-# ─── Stage 1: Build ───────────────────────
+# Stage 1: Build
 FROM denoland/deno:2.4.2 AS builder
 WORKDIR /app
 
@@ -11,7 +11,7 @@ WORKDIR /app/server
 
 RUN deno task build
 
-# ─── Stage 2: Runtime ─────────────────────
+# Stage 2: Runtime
 FROM debian:12-slim
 RUN useradd -ms /bin/bash deno
 USER deno
