@@ -1,4 +1,4 @@
-name: Run Tests
+name: Unit Tests
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
       - 'develop'
 
 jobs:
-  test:
-    name: Run All Tests
+  unit-test:
+    name: Unit Tests
     runs-on: ubuntu-latest
     
     steps:
@@ -23,5 +23,8 @@ jobs:
       with:
         deno-version: v1.x
 
-    - name: Run unit tests
-      run: deno test --allow-all
+    - name: Run server tests
+      run: deno test --allow-all server/
+      
+    - name: Run client tests
+      run: deno test --allow-all client/
