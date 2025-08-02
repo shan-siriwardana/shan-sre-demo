@@ -53,11 +53,20 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Build Frontend (client)
+        run: |
+          cd client
+          deno task build
+
+      - name: Sync Frontend end artifacts to S3
+        run: |
+          aws s3 sync client/build s3://${{ vars.S3_BUCKET_NAME }}/ --delete
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker image
+      - name: Build Docker image for backend
         run: |
           docker build -t ${{ vars.ECR_REPOSITORY }}:${{ github.sha }} .
 
@@ -69,7 +78,7 @@ jobs:
         run: |
           docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
 
-      -  name: Update ECS task definition
+      -  name: Update ECS task definition with new backend image
          run: |
             aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEF }} > task-def.json
 
@@ -79,7 +88,7 @@ jobs:
 
             aws ecs register-task-definition --cli-input-json file://new-task-def.json
 
-      - name: Update ECS service with latest task definition
+      - name: Update ECS service with the new backend definition
         run: |
           LATEST_ARN=$(aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEF }} --query 'taskDefinition.taskDefinitionArn' --output text)
           aws ecs update-service \
