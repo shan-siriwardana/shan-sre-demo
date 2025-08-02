@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Copy everything you need
 COPY deno.json deno.lock server/ lib/ . 
-COPY . . 
+# COPY . . 
 
 # Build in server/
 WORKDIR /app/server
