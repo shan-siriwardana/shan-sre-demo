@@ -4,9 +4,11 @@ WORKDIR /app
 
 # Copy everything you need
 COPY deno.json deno.lock server/ lib/ . 
+COPY . . 
 
 # Build in server/
 WORKDIR /app/server
+
 RUN deno task build
 
 # ─── Stage 2: Runtime ─────────────────────
