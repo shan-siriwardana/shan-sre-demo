@@ -16,9 +16,7 @@ export default defineConfig({
     outDir: "../build",
     emptyOutDir: true,
   },
-  plugins: [react(), deno({
-    nodeModulesDir: true
-  })],
+  plugins: [react(), deno()],
   server: {
     port: env.clientPort,
     fs: {
