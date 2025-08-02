@@ -5,7 +5,7 @@
     "./client",
     "./lib"
   ],
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "tasks": {
     "dev": {
       "dependencies": [
