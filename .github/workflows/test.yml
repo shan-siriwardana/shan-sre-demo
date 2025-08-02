@@ -25,9 +25,6 @@ jobs:
 
     - name: Run server tests
       run: deno test --allow-all server/
-
-    - name: Install client dependencies
-      run: deno cache --node-modules-dir --lock=deno.lock client/deno.json
       
     - name: Run client tests
       run: deno task --cwd client test
