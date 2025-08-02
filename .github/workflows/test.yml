@@ -10,8 +10,8 @@ on:
       - 'develop'
 
 jobs:
-  unit-test:
-    name: Unit Tests
+  Validate:
+    name: Pre deploy validations
     runs-on: ubuntu-latest
     
     steps:
@@ -28,3 +28,39 @@ jobs:
       
     - name: Run client tests
       run: deno task --cwd client test
+
+  Deploy-nonprod:
+    name: Deploy to non-prod
+    needs: unit-test
+    runs-on: ubuntu-latest
+    environment: nonprod
+
+    permissions:
+      id-token: write 
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ vars.ECR_REPOSITORY }}:${{ github.sha }} .
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ vars.ECR_REPOSITORY }}:${{ github.sha }} ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Push Docker image to Amazon ECR
+        run: |
+          docker push ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:${{ github.sha }}
