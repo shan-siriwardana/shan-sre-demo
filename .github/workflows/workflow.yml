@@ -33,7 +33,7 @@ jobs:
 
   # Currently, this job is used to deploy the non-production environment. Deploying to each environment will be a separate job.
   # This will give a top level UI view of promoting of artifacts through environment.
-  Deploy non-prod:
+  Deploy nonprod:
     name: Deploy non-prod
     needs: Validate
     runs-on: ubuntu-latest
