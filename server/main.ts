@@ -8,7 +8,7 @@ import lookupInsight from "./operations/lookup-insight.ts";
 
 console.log("Loading configuration");
 
-// application port
+// application running port
 const env = {
   port: Port.parse(Deno.env.get("SERVER_PORT")),
 };
