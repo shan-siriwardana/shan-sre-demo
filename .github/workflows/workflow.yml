@@ -10,6 +10,8 @@ on:
       - 'develop'
 
 jobs:
+
+  # validate job will be run prior to deployment which includes running unit tests, PR title checks, branch name checks, and other validations.
   Validate:
     name: Pre deploy validations
     runs-on: ubuntu-latest
@@ -29,7 +31,8 @@ jobs:
     - name: Run client tests
       run: deno task --cwd client test
 
-  Deploy-nonprod:
+  # Currently, this job is used to deploy the non-production environment. Deploying to each environment will be a separate job.
+  # This will give a top level UI view of promoting of artifacts through environment.
     name: Deploy non-prod
     needs: Validate
     runs-on: ubuntu-latest
@@ -82,4 +85,5 @@ jobs:
             --cluster ${{ vars.ECS_CLUSTER_NAME }} \
             --service ${{ vars.ECS_SERVICE_NAME }} \
             --task-definition "$LATEST_ARN" \
+            --enable-execute-command \
             --force-new-deployment
