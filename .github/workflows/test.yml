@@ -1,0 +1,32 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+      - 'develop'
+  pull_request:
+    branches:
+      - 'develop'
+
+jobs:
+  test:
+    name: Run All Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      
+    - name: Set up Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
+    - name: Run Server Tests
+      run: deno test --allow-net ./server/
+
+    - name: Run Client Tests
+      run: deno test ./client/
+
+    - name: Run Integration Tests
+      run: deno test --allow-net ./tests/integration/
