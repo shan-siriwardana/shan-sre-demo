@@ -27,7 +27,7 @@ jobs:
       run: deno test --allow-all server/
 
     - name: Install client dependencies
-      run: deno cache --node-modules --lock=deno.lock --lock-write client/deno.json
+      run: deno cache --node-modules-dir --lock=deno.lock --lock-write client/deno.json
       
     - name: Run client tests
       run: deno task --cwd client test
