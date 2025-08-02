@@ -2,9 +2,9 @@
 FROM denoland/deno:2.4.2 AS builder
 WORKDIR /app
 
-# Copy everything you need
-COPY deno.json deno.lock server/ lib/ . 
-# COPY . . 
+# Copy the backend code & its Deno config
+COPY server/ ./server
+COPY lib/    ./lib
 
 # Build in server/
 WORKDIR /app/server
