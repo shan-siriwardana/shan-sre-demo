@@ -75,6 +75,16 @@ jobs:
 
             aws ecs register-task-definition --cli-input-json file://new-task-def.json
 
-      - name: Update ECS service to use new task definition
+      - name: Get latest ECS task definition ARN
+        id: get-task-def-arn
         run: |
-          aws ecs update-service --cluster ${{ vars.ECS_CLUSTER_NAME }} --service ${{ vars.ECS_SERVICE_NAME }} --force-new-deployment
+          LATEST_ARN=$(aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEF }} --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "::set-output name=task-def-arn::$LATEST_ARN"
+
+      - name: Update ECS service with latest task definition
+        run: |
+          aws ecs update-service \
+            --cluster ${{ vars.ECS_CLUSTER_NAME }} \
+            --service ${{ vars.ECS_SERVICE_NAME }} \
+            --task-definition ${{ steps.get-task-def-arn.outputs.task-def-arn }} \
+            --force-new-deployment
