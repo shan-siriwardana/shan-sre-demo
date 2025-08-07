@@ -72,7 +72,7 @@ deno task build
 deno check .
 ```
 
-#### added by shan
+#### added by shan sql
 
 
 Add data:
